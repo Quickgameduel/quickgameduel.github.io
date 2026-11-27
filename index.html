@@ -404,7 +404,7 @@ if(lastMsg)$("msg").textContent=lastMsg();if(lastStat){$("lstat").textContent=la
 function handR(){return Array.from({length:N},()=>1+Math.random()*10|0).sort((a,b)=>a-b)}
 function hand(){return [1,2,3,4,5,6,7,8,9,10].sort(()=>Math.random()-.5).slice(0,N).sort((a,b)=>a-b)}
 function clearTimers(){timers.forEach(clearInterval);timers=[]}
-function start(){inGame=false;clearTimers();cfg=mode==="camp"?LV[lv]:null;N=cfg?cfg.cards:5;rev=!!(cfg&&cfg.rev);playedP=[];ph=hand();ch=(N>=9&&!(cfg&&cfg.tut))?handR():hand();ps=0;cs=(cfg&&cfg.head)||0;round=1;sel=null;over=false;pwK=null;cwK=null;turn=1;cover=null;moves={};oppMoves={};myMove=null;
+function start(){inGame=false;clearTimers();cfg=mode==="camp"?LV[lv]:null;N=cfg?cfg.cards:5;rev=!!(cfg&&cfg.rev);playedP=[];ph=hand();ch=(N>=9&&!(cfg&&cfg.tut))?handR():hand();ps=(cfg&&cfg.ph)||0;cs=(cfg&&cfg.head)||0;round=1;sel=null;over=false;pwK=null;cwK=null;turn=1;cover=null;moves={};oppMoves={};myMove=null;
 lock=mode==="online"&&!oppSeen;pp={dobro:1,inv:1,esc:1};cp={dobro:0,inv:0,esc:0};(cfg?cfg.bp:PK).forEach(k=>cp[k]=1);if(cfg&&cfg.pa)allot(cfg.pa);
 $("again").style.display="none";$("next").style.display="none";["pc","cc"].forEach(i=>{$(i).className="card back";$(i).textContent="?"});
 setMsg(()=>mode==="local"?t("pickFor",nl()):mode==="online"&&!oppSeen?"":t("pick"));setLang(lang)}
@@ -888,7 +888,7 @@ if(tier===4){pt.push("Aqui as regras também são mais duras, não só o robô."
 o.d=[pt.join(" "),en.join(" "),es.join(" ")]}
 return o};
 const PA=["none","d1","d2","all","x1","x2","b1","m1","r2m1","r2"],TD=[
-["Aprenda o básico: cada um tem 10 cartas, de 1 a 10, e ninguém usa poderes. A carta maior ganha 1 ponto. O 1 sempre vence o 10! Empate não pontua.","Learn the basics: each player has 10 cards, from 1 to 10, and nobody uses powers. The higher card wins 1 point. The 1 always beats the 10! A tie scores nothing.","Aprende lo básico: cada uno tiene 10 cartas, del 1 al 10, y nadie usa poderes. La carta más alta gana 1 punto. ¡El 1 siempre vence al 10! Un empate no puntúa."],
+["Aprenda o básico: cada um tem 10 cartas, de 1 a 10, e ninguém usa poderes. A carta maior ganha 1 ponto. O 1 sempre vence o 10! Empate não pontua. 🎁 Para você treinar, já começa com 3 pontos de vantagem!","Learn the basics: each player has 10 cards, from 1 to 10, and nobody uses powers. The higher card wins 1 point. The 1 always beats the 10! A tie scores nothing. 🎁 To help you practice, you start with a 3-point lead!","Aprende lo básico: cada uno tiene 10 cartas, del 1 al 10, y nadie usa poderes. La carta más alta gana 1 punto. ¡El 1 siempre vence al 10! Un empate no puntúa. 🎁 ¡Para practicar, empiezas con 3 puntos de ventaja!"],
 ["Novo poder: ✖2 Dobro. Toque nele ANTES de escolher a carta: se você ganhar a rodada, vale 2 pontos. Só dá para usar uma vez. O robô tem o mesmo poder.","New power: ✖2 Double. Tap it BEFORE choosing your card: if you win the round, it is worth 2 points. You can use it only once. The robot has the same power.","Nuevo poder: ✖2 Doble. Tócalo ANTES de elegir la carta: si ganas la ronda, vale 2 puntos. Solo se usa una vez. El robot tiene el mismo poder."],
 ["Agora são 2 poderes: ✖2 Dobro e 🛡️ Escudo. Com o Escudo, se você perder a rodada, o rival não ganha o ponto. O robô tem os mesmos dois.","Now there are 2 powers: ✖2 Double and 🛡️ Shield. With Shield, if you lose the round, your rival scores nothing. The robot has the same two.","Ahora son 2 poderes: ✖2 Doble y 🛡️ Escudo. Con el Escudo, si pierdes la ronda, tu rival no puntúa. El robot tiene los mismos dos."],
 ["Agora com os 3 poderes! O novo é o 🔄 Inverter: na rodada em que você o usa, a MENOR carta ganha (mas o 1 continua vencendo o 10). O robô também tem os 3.","Now with all 3 powers! The new one is 🔄 Reverse: in the round you use it, the LOWEST card wins (but the 1 still beats the 10). The robot has all 3 too.","¡Ahora con los 3 poderes! El nuevo es 🔄 Invertir: en la ronda en que lo usas, gana la carta MÁS BAJA (pero el 1 sigue venciendo al 10). El robot también tiene los 3."],
@@ -898,7 +898,7 @@ const PA=["none","d1","d2","all","x1","x2","b1","m1","r2m1","r2"],TD=[
 ["Agora é você que tem 1 poder (sorteado) e o robô não tem nenhum. Aproveite!","Now you have 1 power (drawn at random) and the robot has none. Make the most of it!","Ahora tú tienes 1 poder (sorteado) y el robot ninguno. ¡Aprovéchalo!"],
 ["O robô tem 2 poderes e você tem 1 (todos sorteados). Escolha bem a hora de usar o seu.","The robot has 2 powers and you have 1 (all drawn at random). Choose the right moment to use yours.","El robot tiene 2 poderes y tú 1 (todos sorteados). Elige bien cuándo usar el tuyo."],
 ["Último treino: cada um tem 2 poderes sorteados. A partir da próxima fase o desafio aumenta!","Last practice: each player has 2 random powers. From the next level on, the challenge grows!","Último entrenamiento: cada uno tiene 2 poderes sorteados. ¡Desde la próxima fase el desafío aumenta!"]];
-const out=[];PA.forEach((pa,i)=>out.push(mk({cards:10,tut:1,pa},0,TD[i])));
+const out=[];PA.forEach((pa,i)=>out.push(mk(i===0?{cards:10,tut:1,pa,ph:3,smart:0}:{cards:10,tut:1,pa},0,TD[i])));
 
 const E=[{cards:5,bp:["dobro","esc"]},{cards:7,bp:["dobro","esc"]},{cards:3,bp:["dobro","esc"]},{cards:5,bp:["dobro","esc"],rev:1},{cards:7,bp:["dobro","esc"],rev:1}],H=[{cards:7},{cards:5,rev:1},{cards:10},{cards:7,rev:1},{cards:3},{cards:9},{cards:5}],V=[{cards:7},{cards:10,rev:1},{cards:5},{cards:9},{cards:7,rev:1},{cards:10}],
 X=[{cards:7,margin:2},{cards:10,margin:2,head:1},{cards:9,rev:1,margin:2,head:1},{cards:10,noPow:1,margin:2},{cards:10,margin:3,head:1},{cards:10,rev:1,noPow:1,margin:2,head:1},{cards:10,margin:3,head:2},{cards:9,noPow:1,margin:3,head:1}],T=[null,E,H,V,X],cnt=[0,0,0,0,0];
@@ -907,7 +907,7 @@ const arr=T[tier];out.push(mk(arr[cnt[tier]++%arr.length],tier))}
 LV.length=0;out.forEach(l=>LV.push(l));EXTRA.forEach(l=>{if(l.tier==null)l.tier=2;LV.push(l)});
 maxLv=Math.max(0,Math.min(LV.length-1,cleared));lv=maxLv}
 buildLevels2();
-const WIN=[[38,34],[39,42],[39,51],[44,67],[44,55],[44,61],[34,29],[45,59],[40,43],[45,60],[35,45],[35,59],[34,44],[38,62],[42,50],[31,52],[36,46],[35,58],[28,30],[38,62],[28,43],[38,45],[35,47],[32,43],[25,40],[37,43],[34,46],[34,43],[25,41],[41,49],[37,45],[36,48],[17,34],[28,32],[29,43],[18,32],[38,48],[36,49],[17,33],[33,44],[26,39],[16,30],[37,45],[31,46],[11,24],[33,44],[25,43],[8,25],[40,47],[35,47],[6,18],[36,45],[28,43],[3,13],[28,32],[34,48]];LV.forEach((l,i)=>{if(WIN[i])l.pct=WIN[i]});
+const WIN=[[92,90],[39,42],[39,51],[44,67],[44,55],[44,61],[34,29],[45,59],[40,43],[45,60],[35,45],[35,59],[34,44],[38,62],[42,50],[31,52],[36,46],[35,58],[28,30],[38,62],[28,43],[38,45],[35,47],[32,43],[25,40],[37,43],[34,46],[34,43],[25,41],[41,49],[37,45],[36,48],[17,34],[28,32],[29,43],[18,32],[38,48],[36,49],[17,33],[33,44],[26,39],[16,30],[37,45],[31,46],[11,24],[33,44],[25,43],[8,25],[40,47],[35,47],[6,18],[36,45],[28,43],[3,13],[28,32],[34,48]];LV.forEach((l,i)=>{if(WIN[i])l.pct=WIN[i]});
 function lvUI(){const on=mode==="camp";["levels","lvinfo","lvdesc","reset"].forEach(i=>$(i).style.display=on?(i==="levels"?"flex":i==="reset"?"inline-block":"block"):"none");if(!on)return;
 const c=LV[lv],i=lang==="pt"?0:lang==="es"?2:1;$("lvinfo").textContent=t("lv",lv+1,LV.length)+" · "+c.cards+" "+t("cardsW")+" · "+TE[c.tier||0]+" "+t("tier"+(c.tier||0))+" · "+t("robotL",Math.round(c.smart*10));
 $("lvdesc").textContent=(c.d[i]||c.d[1])+"\n"+(c.margin?t("goalM",c.margin):t("goal1"))+(c.pct?"\n"+t("chanceL",c.pct[0],c.pct[1]):"");$("reset").textContent=resetP?(done?t("resetSure"):t("resetWarn")):t("reset");
@@ -983,7 +983,7 @@ if(cm){if(campWin){kind="win";title=t("cleared")}else{kind="lose";title=t("almos
 else if(mode==="local"){if(a===b){kind="tie";title=t("tieT")}else{kind="win";title=t("winnerS",a>b?nl():nr())}}
 else{if(a>b){kind="win";title=t("won")}else if(a<b){kind="lose";title=t("almost")}else{kind="tie";title=t("tieT")}}
 const gain=cm&&campWin&&gainCoins,unlock=cm&&campWin&&lv<LV.length-1;
-const pct=Math.round(Math.min(a,N)/N*100),mk=pct>90?"gold":pct>=50?"silver":"bronze";
+const pct=Math.max(0,Math.round(Math.min(a-((cm&&cfg&&cfg.ph)||0),N)/N*100)),mk=pct>90?"gold":pct>=50?"silver":"bronze";
 const ov=document.createElement("div");ov.id="endov";
 ov.innerHTML='<canvas></canvas><canvas class="cf"></canvas><div class="endbox"><div class="endt"></div><div class="lockrow"></div><div class="medalrow"><span class="party">🎉</span><div class="medal"></div><span class="party r">🎉</span></div><div class="ends l2"></div><div class="ends l1"></div><div class="endtap"></div></div>';
 if(kind==="win")ov.querySelector(".medal").innerHTML=medalSVG(mk);else{ov.querySelectorAll(".party").forEach(e=>e.remove());ov.querySelector(".medal").innerHTML='<div class="bigemo">'+(kind==="lose"?"💔":"🤝")+'</div>'}
