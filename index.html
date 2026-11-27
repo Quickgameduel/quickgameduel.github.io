@@ -345,7 +345,7 @@ try{lang=localStorage.getItem("qgd-lang")||dl()}catch(e){lang=dl()}
 const t=(k,...a)=>{const v=L[lang][k];return typeof v==="function"?v(...a):v};
 const PK=["dobro","inv","esc"];
 const myId=Math.random().toString(36).slice(2,9);
-let mode="camp",R=null,room=null,inRoom=false,oppSeen=false,hiT=null,timers=[],myMove=null,oppMoves={},turn=1,cover=null,moves={};
+var opp={n:"",a:"",c:"",f:""};let mode="camp",R=null,room=null,inRoom=false,oppSeen=false,hiT=null,timers=[],myMove=null,oppMoves={},turn=1,cover=null,moves={};
 let ph,ch,ps,cs,round,lock,pp,cp,sel,lastMsg,lastStat,pwK,cwK,over;
 let cfg=null,N=5,rev=false,playedP=[],lv=0,maxLv=0,campWin=false;
 const LV=[{n:["Aprendiz","Rookie"],cards:5,bp:[],smart:0},{n:["Treino","Training"],cards:5,bp:["dobro"],smart:.2},{n:["Esperto","Clever"],cards:5,bp:PK,smart:.5},{n:["Relâmpago","Lightning"],cards:3,bp:PK,smart:.6},{n:["Mundo Invertido","Upside Down"],cards:5,bp:PK,smart:.5,rev:1},{n:["Mão Cheia","Full Hand"],cards:7,bp:PK,smart:.7},{n:["Mestre Invertido","Reverse Master"],cards:7,bp:PK,smart:.75,rev:1},{n:["Chefão","Final Boss"],cards:10,bp:PK,smart:.9}];
@@ -439,14 +439,14 @@ function end(){over=true;inGame=false;const a=ps,b=cs;if(mode==="camp"){campWin=
 render();setTimeout(endOverlay,1100)}
 function sendMove(){if(room&&myMove)room.emit("move",{id:myId,r:myMove.r,v:myMove.v,pw:myMove.pw}).catch(()=>{})}
 function tryResolve(){if(!myMove)return;const o=oppMoves[myMove.r];if(!o)return;clearTimers();const m=myMove;myMove=null;delete oppMoves[m.r];if(o.pw)cp[o.pw]=0;reveal(m.v,o.v,m.pw,o.pw)}
-function leaveRoom(){clearInterval(hiT);clearTimers();if(room)room.leave().catch(()=>{});room=null;inRoom=false;oppSeen=false}
+function leaveRoom(){opp={n:"",a:"",c:"",f:""};clearInterval(hiT);clearTimers();if(room)room.leave().catch(()=>{});room=null;inRoom=false;oppSeen=false}
 function setMode(m){if(m===mode)return;if(m==="online"&&!R){mode="online";setStat(()=>t("noRoom"));$("lobby").style.display="flex";$("lobbyIn").style.display="none";start();return}
 leaveRoom();mode=m;setStat(null);$("lobbyIn").style.display="flex";$("lobby").style.display=m==="online"?"flex":"none";start()}
 async function joinRoom(){const c=$("code").value.toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,20);if(!c){setStat(()=>t("badCode"));return}
 try{room=await R.join("qgd-"+c)}catch(e){setStat(()=>t("noRoom"));return}
 inRoom=true;$("lobbyIn").style.display="none";
-const hi=()=>{if(room)room.emit("hi",{id:myId}).catch(()=>{})};
-room.on("hi",m=>{if(!m.data||m.data.id===myId)return;if(!oppSeen){oppSeen=true;clearInterval(hiT);hi();setStat(()=>t("ready"));start()}});
+const hi=()=>{if(room)room.emit("hi",{id:myId,n:uname,a:uav,c:ncol,f:nfont}).catch(()=>{})};
+room.on("hi",m=>{if(!m.data||m.data.id===myId)return;const d=m.data,nn=typeof d.n==="string"?d.n.slice(0,12):"",aa=typeof d.a==="string"&&[...d.a].length<=2?d.a:"",cc=TC[d.c]?d.c:"",ff=FONT_CSS[d.f]?d.f:"";if(opp.n!==nn||opp.a!==aa||opp.c!==cc||opp.f!==ff){opp={n:nn,a:aa,c:cc,f:ff};if(oppSeen)render()}if(!oppSeen){oppSeen=true;clearInterval(hiT);hi();setStat(()=>t("ready"));start()}});
 room.on("move",m=>{const d=m.data;if(!d||d.id===myId||!Number.isInteger(d.r)||!Number.isInteger(d.v)||d.v<1||d.v>10)return;oppMoves[d.r]={v:d.v,pw:PK.includes(d.pw)?d.pw:null};tryResolve()});
 room.on("again",m=>{if(m.data&&m.data.id!==myId)start()});
 setStat(()=>t("wait",c));hi();hiT=setInterval(hi,2000);start()}
@@ -860,9 +860,9 @@ $("gear").onclick=()=>{stTxt();$("settings").style.display="block";centerRows()}
 $("coinBtn").onclick=()=>{stTxt();$("settings").style.display="block";centerRows();$("shopBox").scrollIntoView()};
 function award(){return null}
 function zones(){const loc=mode==="local",tn=loc&&turn===2,kb=loc?(tn?"p2":"p1"):"you",kt=loc?(tn?"p1":"p2"):(mode==="online"?"friend":"bot");
-const mine=k=>k==="you"||k==="p1",nm=k=>mine(k)&&uname?uname:t(k),av=k=>k==="bot"?(uav==="🤖"?"👾":"🤖"):mine(k)?uav:(uav==="🐱"?"🐶":"🐱");
+const mine=k=>k==="you"||k==="p1",fr=k=>k==="friend"&&mode==="online"&&opp.n,nm=k=>mine(k)&&uname?uname:(fr(k)?opp.n:t(k)),av=k=>k==="bot"?(uav==="🤖"?"👾":"🤖"):mine(k)?uav:(k==="friend"&&opp.a?opp.a:(uav==="🐱"?"🐶":"🐱"));
 $("meName").textContent=nm(kb);$("oppName").textContent=nm(kt);$("meAv").textContent=av(kb);$("oppAv").textContent=av(kt);
-$("scMeName").textContent=nm(kb);$("scOppName").textContent=nm(kt);nameFx($("meName"),mine(kb));nameFx($("scMeName"),mine(kb));nameFx($("oppName"),mine(kt));nameFx($("scOppName"),mine(kt));
+$("scMeName").textContent=nm(kb);$("scOppName").textContent=nm(kt);nameFx($("meName"),mine(kb));nameFx($("scMeName"),mine(kb));nameFx($("oppName"),mine(kt)||!!fr(kt),fr(kt)?opp:null);nameFx($("scOppName"),mine(kt)||!!fr(kt),fr(kt)?opp:null);
 $("mePts").textContent=tn?cs:ps;$("oppPts").textContent=tn?ps:cs;
 $("hud").textContent=(mode==="camp"?t("lv",lv+1,LV.length)+" "+TE[LV[lv].tier||0]+" · ":"")+(over?t("end"):t("round",Math.min(round,N),N));
 $("hand").className="hand"+(N>=8?" huge":N>=6?" many":"");
@@ -938,7 +938,7 @@ const FONT_IDS=["cursiva","cartoon","maquina","classica","gordinha","espacada","
 const FONT_CSS={"":{},cursiva:{fontFamily:"'Segoe Script','Bradley Hand','Snell Roundhand','Brush Script MT',cursive",fontStyle:"italic",fontWeight:"700"},cartoon:{fontFamily:"'Comic Sans MS','Chalkboard SE','Comic Neue',cursive",fontWeight:"700"},maquina:{fontFamily:"ui-monospace,'SF Mono',Menlo,Consolas,'Courier New',monospace",fontWeight:"800"},classica:{fontFamily:"Georgia,'Times New Roman',serif",fontStyle:"italic",fontWeight:"700"},gordinha:{fontFamily:"'Arial Black','Trebuchet MS',Impact,sans-serif",fontWeight:"900",letterSpacing:".5px"},espacada:{fontFamily:"system-ui,'Helvetica Neue',sans-serif",fontWeight:"300",letterSpacing:".22em"},fantasia:{fontFamily:"fantasy,Papyrus,Luminari,Impact,sans-serif",fontWeight:"700"}};
 var unf=[],nfont="";try{unf=JSON.parse(localStorage.getItem("qgd-unf")||"[]");nfont=localStorage.getItem("qgd-nf")||""}catch(e){}
 if(!Array.isArray(unf))unf=[];if(nfont&&!unf.includes(nfont))nfont="";
-function nameFx(el,on){if(!el)return;["fontFamily","fontStyle","fontWeight","letterSpacing","color"].forEach(p=>el.style[p]="");el.style.webkitTextStroke="0";if(!on)return;if(ncol){el.style.color=TC[ncol];el.style.webkitTextStroke=nstroke(ncol)}Object.assign(el.style,FONT_CSS[nfont]||{})}
+function nameFx(el,on,o){if(!el)return;["fontFamily","fontStyle","fontWeight","letterSpacing","color"].forEach(p=>el.style[p]="");el.style.webkitTextStroke="0";if(!on)return;const c=o?o.c:ncol,f=o?o.f:nfont;if(c&&TC[c]){el.style.color=TC[c];el.style.webkitTextStroke=nstroke(c)}Object.assign(el.style,FONT_CSS[f]||{})}
 function fnUI(){const r=$("fnRow");r.innerHTML="";[""].concat(FONT_IDS).forEach(id=>{const ok=id===""||unf.includes(id),b=document.createElement("button");b.className="lang ncb"+(nfont===id?" on":"");b.textContent=ok?"Aa":"🔒";b.disabled=!ok;if(ok)Object.assign(b.style,FONT_CSS[id]);b.onclick=()=>{nfont=id;try{localStorage.setItem("qgd-nf",nfont)}catch(e){}fnUI();nameFx($("nameIn"),true);render()};r.appendChild(b)})}
 function lockedItems(){const o=[];AV_POOL.forEach(id=>{if(!ua.includes(id))o.push({t:"a",id})});COL_POOL.forEach(id=>{if(!uc.includes(id))o.push({t:"c",id})});SK.forEach(id=>{if(!unc.includes(id))o.push({t:"n",id})});FONT_IDS.forEach(id=>{if(!unf.includes(id))o.push({t:"f",id})});CS_POOL.forEach(id=>{if(!ucs.includes(id))o.push({t:"k",id})});return o}
 function saveInv(){try{localStorage.setItem("qgd-coins",coins);localStorage.setItem("qgd-uc",JSON.stringify(uc));localStorage.setItem("qgd-ua",JSON.stringify(ua));localStorage.setItem("qgd-ucs",JSON.stringify(ucs));localStorage.setItem("qgd-unc",JSON.stringify(unc));localStorage.setItem("qgd-unf",JSON.stringify(unf))}catch(e){}}
