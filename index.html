@@ -454,7 +454,7 @@ $("again").onclick=()=>{if(mode==="online"&&room)room.emit("again",{id:myId}).ca
 $("l-pt").onclick=()=>setLang("pt");$("l-en").onclick=()=>setLang("en");$("l-es").onclick=()=>setLang("es");
 $("m-camp").onclick=()=>setMode("camp");$("m-bot").onclick=()=>setMode("bot");$("m-local").onclick=()=>setMode("local");$("m-online").onclick=()=>setMode("online");
 $("joinBtn").onclick=joinRoom;$("code").onkeydown=e=>{if(e.key==="Enter")joinRoom()};
-const NET_URL="";
+const NET_URL="https://quick-duel-b29fe-default-rtdb.firebaseio.com";
 function fbRoom(name){
 const base=NET_URL.replace(/\/+$/,"")+"/rooms/"+name,hs={};let seen=null,alive=true,n=0;
 const poll=async()=>{if(!alive)return;
