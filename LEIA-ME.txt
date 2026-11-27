@@ -1,0 +1,36 @@
+QUICK DUEL - PASTA COMPLETA DO JOGO
+
+COMO USAR (tudo pelo celular)
+1. Extraia este zip no app Arquivos (toque no zip e em Extrair).
+2. Envie para o GitHub (repositorio publico chamado SEUUSUARIO.github.io) estes 7 arquivos:
+   index.html, manifest.webmanifest, sw.js, icon-192.png, icon-512.png, icon-maskable-512.png, privacidade.html
+   Crie tambem um arquivo vazio chamado .nojekyll.
+3. Em Settings > Pages, escolha a branch main e a pasta root. O jogo abre em https://SEUUSUARIO.github.io
+4. No Chrome, abra o link e toque em Instalar app (ou no botao do jogo). O icone das cartas aparece na tela inicial.
+5. Edite privacidade.html trocando [SEU NOME] e [SEU E-MAIL].
+
+COMO ATUALIZAR O JOGO
+- Sempre que eu mandar uma versao nova, baixe este zip de novo e reenvie para o GitHub os arquivos que mudaram
+  (quase sempre index.html e sw.js; use Add file > Upload files e confirme que quer substituir).
+- Se o celular nao mostrar a versao nova, feche e abra o Chrome.
+
+PARA A PLAY STORE
+- icon-512.png = icone do app. feature-graphic-1024x500.png = imagem de destaque da loja.
+- As capturas de tela voce tira no celular com o jogo aberto.
+- O guia completo de publicacao esta na conversa.
+
+MODO ONLINE FORA DO CLAUDE (opcional)
+- Precisa de um banco gratis no Firebase. No index.html, ache a linha  const NET_URL="";  e coloque o endereco do banco.
+- Regras do banco: { "rules": { "rooms": { "$room": { ".read": true, ".write": true } } } }
+- Sem isso o botao Online fica oculto; contra o robo, no mesmo aparelho e a campanha funcionam normalmente (ate offline).
+
+COMO ACRESCENTAR NOVAS FASES (atualizacao futura)
+- O jogo tem 56 fases. As fases 1 a 7 sao faceis; depois o padrao se repete de 6 em 6: dificil, facil, muito dificil, facil, extremamente dificil, facil.
+- Para criar uma fase nova no mesmo padrao: no index.html, procure a linha  const NAMES=Array.from({length:49}  e aumente o numero 49. Cada fase nova e criada sozinha, com a dificuldade do padrao.
+- Para uma fase com regras proprias: procure a lista EXTRA e acrescente um objeto (o exemplo esta no comentario ao lado dela).
+- O progresso e os premios dos jogadores sao preservados quando voce acrescenta fases.
+
+JOGO SEM O CLAUDE (independente)
+- Estes arquivos nao dependem do Claude: depois que estao no seu site (ou na Play Store), quem baixa so recebe o jogo.
+- O link antigo claude.ai continua existindo; use apenas o link do seu site. Se quiser, apague a versao antiga no proprio Claude.
+- O progresso, as moedas e os premios ficam salvos no aparelho, por endereco: quem jogou no link do Claude comeca do zero no seu site.
