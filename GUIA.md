@@ -34,5 +34,6 @@ O jogo inteiro é **um único arquivo: `index.html`**. Os outros arquivos são o
 ## Play Store
 Para publicar, use https://www.pwabuilder.com com o endereço https://quickgameduel.github.io . A política de privacidade fica em https://quickgameduel.github.io/privacidade.html
 
-## Online para 4 jogadores
-Procure `ONLINE PARA 4 JOGADORES` no `index.html`. Regras da rodada ficam em `function g4resolve` (cartas iguais se anulam, 1 vence 10, Dobro/Inverter/Escudo) e os textos em `const L4`. Quem vence leva 3 Quickpay (procure `coins+=3` dentro de `function g4end`).
+## Online (2, 3 ou 4 jogadores) e páginas
+Procure `ONLINE PARA 4 JOGADORES` no `index.html`. A regra de cada rodada fica em `function g4resolve` (cartas iguais se anulam, 1 vence 10, Dobro/Inverter/Escudo) e os textos em `const L4`. Quem vence leva 3 Quickpay (procure `coins+=3` em `function g4end`). As salas são separadas por tamanho (`qgd2-`, `qgd3-`, `qgd4-` + código).
+As páginas que deslizam (Online, Loja, Configurações) ficam em `PÁGINAS: deslizar`. O jogo abre offline (Evento, Robô e Mesmo aparelho) graças ao `sw.js`.
