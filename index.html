@@ -260,6 +260,10 @@ main{padding:calc(56px + env(safe-area-inset-top,0px)) 14px 14px;gap:0}
 #s1 #loadtxt{color:#fff}#s1 #loadtxt.rdy{color:#fff}
 .boxe{cursor:pointer;padding:10px 24px}
 .ncb:not([style*="color"]){color:#555}
+.hdr{flex-direction:column;gap:6px;margin-top:16px}
+.hdr .logo{width:92px;height:92px;border-radius:28px;box-shadow:0 4px 0 var(--line)}
+.hdr h1{font-size:25px;margin:0}
+#s2{gap:8px}#playBtn{margin:14px 0 0}
 </style>
 </head>
 <body>
@@ -903,7 +907,7 @@ const PA=["none","d1","d2","all","x1","x2","b1","m1","r2m1","r2"],TD=[
 ["Agora é você que tem 1 poder (sorteado) e o robô não tem nenhum. Aproveite!","Now you have 1 power (drawn at random) and the robot has none. Make the most of it!","Ahora tú tienes 1 poder (sorteado) y el robot ninguno. ¡Aprovéchalo!"],
 ["O robô tem 2 poderes e você tem 1 (todos sorteados). Escolha bem a hora de usar o seu.","The robot has 2 powers and you have 1 (all drawn at random). Choose the right moment to use yours.","El robot tiene 2 poderes y tú 1 (todos sorteados). Elige bien cuándo usar el tuyo."],
 ["Último treino: cada um tem 2 poderes sorteados. A partir da próxima fase o desafio aumenta!","Last practice: each player has 2 random powers. From the next level on, the challenge grows!","Último entrenamiento: cada uno tiene 2 poderes sorteados. ¡Desde la próxima fase el desafío aumenta!"]];
-const out=[];PA.forEach((pa,i)=>out.push(mk(i===0?{cards:10,tut:1,pa,ph:5,smart:0}:{cards:10,tut:1,pa,ph:2},0,TD[i])));
+const out=[];PA.forEach((pa,i)=>out.push(mk(i===0?{cards:10,tut:1,pa,ph:2,smart:0}:{cards:10,tut:1,pa,ph:2},0,TD[i])));
 
 const E=[{cards:5,bp:["dobro","esc"]},{cards:7,bp:["dobro","esc"]},{cards:3,bp:["dobro","esc"]},{cards:5,bp:["dobro","esc"],rev:1},{cards:7,bp:["dobro","esc"],rev:1}],H=[{cards:7},{cards:5,rev:1},{cards:10},{cards:7,rev:1},{cards:3},{cards:9},{cards:5}],V=[{cards:7},{cards:10,rev:1},{cards:5},{cards:9},{cards:7,rev:1},{cards:10}],
 X=[{cards:7,margin:2},{cards:10,margin:2,head:1},{cards:9,rev:1,margin:2,head:1},{cards:10,noPow:1,margin:2},{cards:10,margin:3,head:1},{cards:10,rev:1,noPow:1,margin:2,head:1},{cards:10,margin:3,head:2},{cards:9,noPow:1,margin:3,head:1}],T=[null,E,H,V,X],cnt=[0,0,0,0,0];
@@ -912,7 +916,7 @@ const arr=T[tier];out.push(mk(arr[cnt[tier]++%arr.length],tier))}
 LV.length=0;out.forEach(l=>LV.push(l));EXTRA.forEach(l=>{if(l.tier==null)l.tier=2;LV.push(l)});
 maxLv=Math.max(0,Math.min(LV.length-1,cleared));lv=maxLv}
 buildLevels2();
-const WIN=[[99,99],[75,77],[74,84],[68,90],[72,81],[69,86],[71,65],[80,88],[70,76],[73,85],[35,45],[35,59],[34,44],[38,62],[42,50],[31,52],[36,46],[35,58],[28,30],[38,62],[28,43],[38,45],[35,47],[32,43],[25,40],[37,43],[34,46],[34,43],[25,41],[41,49],[37,45],[36,48],[17,34],[28,32],[29,43],[18,32],[38,48],[36,49],[17,33],[33,44],[26,39],[16,30],[37,45],[31,46],[11,24],[33,44],[25,43],[8,25],[40,47],[35,47],[6,18],[36,45],[28,43],[3,13],[28,32],[34,48]];LV.forEach((l,i)=>{if(WIN[i])l.pct=WIN[i]});
+const WIN=[[78,79],[76,75],[73,85],[68,88],[73,82],[70,85],[71,69],[78,90],[67,76],[70,86],[35,45],[35,59],[34,44],[38,62],[42,50],[31,52],[36,46],[35,58],[28,30],[38,62],[28,43],[38,45],[35,47],[32,43],[25,40],[37,43],[34,46],[34,43],[25,41],[41,49],[37,45],[36,48],[17,34],[28,32],[29,43],[18,32],[38,48],[36,49],[17,33],[33,44],[26,39],[16,30],[37,45],[31,46],[11,24],[33,44],[25,43],[8,25],[40,47],[35,47],[6,18],[36,45],[28,43],[3,13],[28,32],[34,48]];LV.forEach((l,i)=>{if(WIN[i])l.pct=WIN[i]});
 function lvUI(){const on=mode==="camp";["levels","lvinfo","lvdesc","reset"].forEach(i=>$(i).style.display=on?(i==="levels"?"flex":i==="reset"?"inline-block":"block"):"none");if(!on)return;
 const c=LV[lv],i=lang==="pt"?0:lang==="es"?2:1;$("lvinfo").textContent=t("lv",lv+1,LV.length)+" · "+c.cards+" "+t("cardsW")+" · "+TE[c.tier||0]+" "+t("tier"+(c.tier||0))+" · "+t("robotL",Math.round(c.smart*10));
 $("lvdesc").textContent=(c.d[i]||c.d[1])+"\n"+(c.margin?t("goalM",c.margin):t("goal1"))+(c.pct?"\n"+t("chanceL",c.pct[0],c.pct[1]):"");$("reset").textContent=resetP?(done?t("resetSure"):t("resetWarn")):t("reset");
@@ -977,7 +981,7 @@ $("modeExp").textContent=mode==="bot"?t("expBot"):mode==="local"?t("expLocal"):m
 const lk=c&&lv>maxLv;$("playBtn").disabled=lk;$("playBtn").textContent=lk?"🔒 "+t("faseBtn",lv+1):(inGame&&!over)?t("contBtn"):c?t("faseBtn",lv+1):t("playBtn")}
 function lvUI(){const on=mode==="camp";["levels","lvinfo","lvdesc","reset"].forEach(i=>$(i).style.display=on?(i==="levels"?"flex":i==="reset"?"inline-block":"block"):"none");if(!on)return;
 const c=LV[lv],i=lang==="pt"?0:lang==="es"?2:1;$("lvinfo").textContent=(lv>maxLv?"🔒 ":"")+t("lv",lv+1,LV.length)+" · "+c.cards+" "+t("cardsW")+" · "+TE[c.tier||0]+" "+t("tier"+(c.tier||0))+" · "+t("robotL",Math.round(c.smart*10));
-$("lvdesc").textContent=(c.d[i]||c.d[1])+"\n"+(c.ph?"\n🎁 "+["Você começa com "+c.ph+" pontos de vantagem!","You start with a "+c.ph+"-point lead!","¡Empiezas con "+c.ph+" puntos de ventaja!"][i]:"")+(c.margin?t("goalM",c.margin):t("goal1"))+(c.pct?"\n"+t("chanceL",c.pct[0],c.pct[1]):"");$("reset").textContent=resetP?(done?t("resetSure"):t("resetWarn")):t("reset");
+$("lvdesc").textContent=(c.d[i]||c.d[1])+"\n"+(c.ph?"\n🎁 "+["Você começa com "+c.ph+" pontos de vantagem!","You start with a "+c.ph+"-point lead!","¡Empiezas con "+c.ph+" puntos de ventaja!"][i]+"\n":"")+(c.margin?t("goalM",c.margin):t("goal1"))+(c.pct?"\n"+(c.tut?["📊 Chance de vencer: ~","📊 Chance to win: ~","📊 Probabilidad de ganar: ~"][i]+Math.max(c.pct[0],c.pct[1])+"%":t("chanceL",c.pct[0],c.pct[1])):"");$("reset").textContent=resetP?(done?t("resetSure"):t("resetWarn")):t("reset");
 const b=$("levels");b.innerHTML="";LV.forEach((x,k)=>{const e=document.createElement("button"),lk=k>maxLv;e.className="mode d"+(x.tier||0)+(k===lv?" on":"")+(lk?" lock":"");e.textContent=(lk?"🔒":"")+(k+1);e.onclick=()=>{if(k===lv)return;lv=k;start()};b.appendChild(e)});
 try{const cur=b.children[lv];if(cur)b.scrollTop=cur.offsetTop-(b.clientHeight-cur.offsetHeight)/2}catch(x){}}
 $("playBtn").onclick=async()=>{if(mode==="camp"&&lv>maxLv)return;if(inGame&&!over){show(3);return}if(mode==="online"){if(!R){setStat(()=>t("noRoom"));return}if(!inRoom){await joinRoom();if(!inRoom)return}}else start();inGame=true;show(3)};
